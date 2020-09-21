@@ -28,6 +28,10 @@ public class TopicRabbitConfig {
     public Queue firstQueue() {
         return new Queue(TopicRabbitConfig.man);
     }
+    @Bean
+    public Queue womenQueue() {
+        return new Queue(TopicRabbitConfig.man);
+    }
 
 
     @Bean
@@ -42,9 +46,14 @@ public class TopicRabbitConfig {
     Binding bindingExchangeMessage() {
         return BindingBuilder.bind(testQueue()).to(exchange()).with("*.man");
     }
+//    @Bean
+//    Binding bindingExchangeMessage1() {
+//        return BindingBuilder.bind(firstQueue()).to(exchange()).with("topic.#");
+//    }
+
     @Bean
-    Binding bindingExchangeMessage1() {
-        return BindingBuilder.bind(firstQueue()).to(exchange()).with("topic.#");
+    Binding bindingExchangeMessage2() {
+        return BindingBuilder.bind(womenQueue()).to(exchange()).with(TopicRabbitConfig.woman);
     }
 
 

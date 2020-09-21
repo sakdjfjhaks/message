@@ -1,5 +1,6 @@
 package com.practice.message.rabbitmq.controller;
 
+import com.practice.message.rabbitmq.config.TopicRabbitConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,7 @@ public class SendMessageController {
     @GetMapping("/sendTopicMessage1")
     public String sendTopicMessage1() {
         String messageId = String.valueOf(UUID.randomUUID());
-        String messageData = "message: M A N  all";
+        String messageData = "message: sendTopicMessage1";
         String createTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Map<String, Object> manMap = new HashMap<>();
         manMap.put("messageId", messageId);
@@ -51,13 +52,25 @@ public class SendMessageController {
     @GetMapping("/sendTopicMessage2")
     public String sendTopicMessage2() {
         String messageId = String.valueOf(UUID.randomUUID());
-        String messageData = "message: topic is all ";
+        String messageData = "message: sendTopicMessage2 ";
         String createTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Map<String, Object> womanMap = new HashMap<>();
         womanMap.put("messageId", messageId);
         womanMap.put("messageData", messageData);
         womanMap.put("createTime", createTime);
         rabbitTemplate.convertAndSend("topicExchange", "topic.#", womanMap);
+        return "ok";
+    }
+    @GetMapping("/sendWomenTopicMessage")
+    public String sendWomenTopicMessage() {
+        String messageId = String.valueOf(UUID.randomUUID());
+        String messageData = "message: sendWomenTopicMessage";
+        String createTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Map<String, Object> womanMap = new HashMap<>();
+        womanMap.put("messageId", messageId);
+        womanMap.put("messageData", messageData);
+        womanMap.put("createTime", createTime);
+        rabbitTemplate.convertAndSend("topicExchange", TopicRabbitConfig.woman, womanMap);
         return "ok";
     }
 
