@@ -1,5 +1,8 @@
 package com.practice.message.rabbitmq.config;
 
+import com.practice.message.rabbitmq.constant.RabbitMqExchangeConstant;
+import com.practice.message.rabbitmq.constant.RabbitMqKeyConstant;
+import com.practice.message.rabbitmq.constant.RabbitMqQueueConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -15,28 +18,26 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TopicRabbitConfig {
-    //绑定键
-    public final static String test = "test.man";
-    public final static String man = "topic.man";
-    public final static String woman = "topic.woman";
 
     @Bean
-    public Queue testQueue() {
-        return new Queue(TopicRabbitConfig.test);
-    }
-    @Bean
     public Queue firstQueue() {
-        return new Queue(TopicRabbitConfig.man);
+        return new Queue(RabbitMqQueueConstant.FIRST_TOPIC_QUEUE_CONSTANT);
     }
+
     @Bean
-    public Queue womenQueue() {
-        return new Queue(TopicRabbitConfig.man);
+    public Queue secondQueue() {
+        return new Queue(RabbitMqQueueConstant.SECOND_TOPIC_QUEUE_CONSTANT);
+    }
+
+    @Bean
+    public Queue thirdQueue() {
+        return new Queue(RabbitMqQueueConstant.THIRD_TOPIC_QUEUE_CONSTANT);
     }
 
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange("topicExchange");
+        return new TopicExchange(RabbitMqExchangeConstant.TOPIC_EXCHANGE_CONSTANT);
     }
 
 
@@ -44,16 +45,16 @@ public class TopicRabbitConfig {
     //这样只要是消息携带的路由键是topic.man,才会分发到该队列
     @Bean
     Binding bindingExchangeMessage() {
-        return BindingBuilder.bind(testQueue()).to(exchange()).with("*.man");
+        return BindingBuilder.bind(firstQueue()).to(exchange()).with(RabbitMqKeyConstant.FIRST_TOPIC_KEY_CONSTANT);
     }
-//    @Bean
-//    Binding bindingExchangeMessage1() {
-//        return BindingBuilder.bind(firstQueue()).to(exchange()).with("topic.#");
-//    }
+    @Bean
+    Binding bindingExchangeMessage1() {
+        return BindingBuilder.bind(secondQueue()).to(exchange()).with(RabbitMqKeyConstant.SECOND_TOPIC_KEY_CONSTANT);
+    }
 
     @Bean
     Binding bindingExchangeMessage2() {
-        return BindingBuilder.bind(womenQueue()).to(exchange()).with(TopicRabbitConfig.woman);
+        return BindingBuilder.bind(thirdQueue()).to(exchange()).with(RabbitMqKeyConstant.THIRD_TOPIC_KEY_CONSTANT);
     }
 
 
